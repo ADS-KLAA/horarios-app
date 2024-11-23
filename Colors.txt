@@ -1,0 +1,3 @@
+AppBgGray #F2F3F5
+CardBgGray #FAFBFC
+PrimaryBlack #1D1D1D
