@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Login: React.FC = () => {
+const Signup: React.FC = () => {
+  const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!name || !email || !password) return;
     navigate("/");
   };
 
@@ -38,6 +39,20 @@ const Login: React.FC = () => {
           style={{ marginBottom: "24px" }}
         />
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <input
+            type="name"
+            placeholder="Nome"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            style={{
+              padding: "10px",
+              fontSize: "16px",
+              backgroundColor: "rgba(242, 243, 245, var(--tw-bg-opacity, 1))",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+            }}
+          />
           <input
             type="email"
             placeholder="Email"
@@ -78,7 +93,7 @@ const Login: React.FC = () => {
               cursor: "pointer",
             }}
           >
-            Login
+            Registar
           </button>
         </form>
       </div>
@@ -86,4 +101,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Signup;

@@ -4,6 +4,7 @@ import App from "../App"
 import Dashboard from "../pages/Dashboard"
 import Turmas from "../pages/Turmas"
 import Login from "../pages/Login"
+import Signup from "../pages/Signup"
 
 function RouterComponent() {
   return (
@@ -16,6 +17,7 @@ function RouterComponent() {
                 </Route>
             </Route>
             <Route path="login" element={<Login/>}/>
+            <Route path="signup" element={<Signup/>}/>
         </Routes>
     </BrowserRouter>
   )
