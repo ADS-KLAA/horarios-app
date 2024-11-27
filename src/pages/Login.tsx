@@ -33,7 +33,7 @@ const Login: React.FC = () => {
         }}
       >
         <img
-          src="src/images/iscteLogo.png"
+          src="src/assets/iscteLogo.png"
           alt="ISCTE logo"
           style={{ marginBottom: "24px" }}
         />
