@@ -13,13 +13,13 @@ function WeekChanger({currDate,changeDate} : WeekChangerProps) {
 
   return (
     <section className="h-10 flex gap-2">
-        <button onClick={()=> forwardOrBackAWeek(-1)} className="bg-primaryGray w-12  font-semibold text-lg rounded-xl">
+        <button onClick={()=> forwardOrBackAWeek(-1)} className="bg-primaryGray hover:bg-gray-200 active:bg-gray-300 w-12  font-semibold text-lg rounded-xl">
             {"<"}
         </button>
-        <button onClick={()=> changeDate(new Date())} className="bg-primaryGray px-6 font-semibold text-md rounded-xl">
+        <button onClick={()=> changeDate(new Date())} className="bg-primaryGray hover:bg-gray-200 active:bg-gray-300 px-6 font-semibold text-md rounded-xl">
             {"Today"}
         </button>
-        <button onClick={()=> forwardOrBackAWeek(1)} className="bg-primaryGray w-12 text-lg font-semibold rounded-xl">
+        <button onClick={()=> forwardOrBackAWeek(1)} className="bg-primaryGray hover:bg-gray-200 active:bg-gray-300 w-12 text-lg font-semibold rounded-xl">
             {">"}
         </button>
     </section>
