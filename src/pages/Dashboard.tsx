@@ -6,6 +6,7 @@ import WeekChanger from "../components/WeekChanger";
 import RangeSelector from "../components/RangeSelector";
 
 const today = new Date();
+
 function getRestOfWeekDates(today : Date) {
     const restOfWeek = [];
     const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
@@ -22,12 +23,15 @@ function getRestOfWeekDates(today : Date) {
 
 
 function Dashboard() {
-
   const [weekreference,setWeekreference] = useState<Date>(today);   
   const dates = useMemo(() =>  getRestOfWeekDates(weekreference),[weekreference]); 
   const [range, setRange] = useState([8, 22]); 
   const hours = useMemo(() => Array.from({ length: range[1] - range[0] + 1 }, (_, i) => `${range[0] + i}:00`) ,[range]) ; // Generate hours from 8:00 to 22:00
-
+ /*const dayProgress = useMemo(()=> {
+    if(today.getHours() < range[0] || today.getHours() > range[1] || range[0] === range[1]) return 0;
+    return ((today.getHours()*60 +today.getMinutes()) / ((range[1] - range[0])*60) ) *( 128+28);
+  },[range,today]);
+  console.log(Number.parseInt(dayProgress.toFixed(0)));*/
 
   return (
     <main 
@@ -43,7 +47,7 @@ function Dashboard() {
                 {dates.map((date) =>  <DayCard date={date}/>)}
             </ul>
         </header>
-        <section className="pl-10 pr-5 pt-6 flex-grow overflow-y-auto flex justify-around  w-full ">
+        <section className="pl-10 pr-5 pt-6 flex-grow overflow-y-auto flex relative justify-around  w-full ">
             <aside className="w-20">
                 {hours.map((hour) =>
                     (
@@ -52,7 +56,7 @@ function Dashboard() {
                 )}
             </aside>
             {dates.map((_,index) => ( <DayCol hours={hours} isToday={today.getDay()===index+1}/> ))}
-            
+            {/*dayProgress > 0 && <hr className={`absolute w-full h-2 bg-black top-[${Number.parseInt(dayProgress.toFixed(0))}px]`}></hr>*/}
         </section>
     </main>
   )

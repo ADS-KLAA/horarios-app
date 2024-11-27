@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Range } from "react-range";
 
 interface RangeProps {
