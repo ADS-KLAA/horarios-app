@@ -1,4 +1,5 @@
 import { ClassFiledSVG } from "../components/ClassSVG"
+import ComboBox from "../components/Dropdown"
 
 function Turmas() {
   return (
@@ -33,10 +34,11 @@ function Turmas() {
               </figure>
           </li>
         </ul>
+        {/* <ComboBox label="Matita" options={["cao","gato","tartaruga"]}/> */}
       </section>
-      <section className="border bg-opacity-80 w-1/4 border-gray-300 border-opacity-40 rounded-[28px] h-full  flex flex-col bg-secondaryGray shadow-sm">
+      {/* <section className="border bg-opacity-80 w-1/4 border-gray-300 border-opacity-40 rounded-[28px] h-full  flex flex-col bg-secondaryGray shadow-sm">
 
-  </section>
+      </section> */}
     </main>
   )
 }
