@@ -4,6 +4,7 @@ import DayCard from "../components/DayCard";
 import DayCol from "../components/DayCol";
 import WeekChanger from "../components/WeekChanger";
 import RangeSelector from "../components/RangeSelector";
+import { useSessions } from "../api/useSessions";
 
 const today = new Date();
 
@@ -23,6 +24,9 @@ function getRestOfWeekDates(today : Date) {
 
 
 function Dashboard() {
+
+  const {data:aulas,isLoading} = useSessions();  
+
   const [weekreference,setWeekreference] = useState<Date>(today);   
   const dates = useMemo(() =>  getRestOfWeekDates(weekreference),[weekreference]); 
   const [range, setRange] = useState([8, 22]); 
@@ -33,29 +37,29 @@ function Dashboard() {
   },[range,today]);
   console.log(Number.parseInt(dayProgress.toFixed(0)));*/
 
-  return (
+  return !isLoading && (
     <main 
     className="border bg-opacity-80 border-gray-300 border-opacity-40 rounded-[28px] h-full flex-grow flex flex-col bg-secondaryGray shadow-sm">
         <header className="bg-white w-full shadow-sm px-10  flex flex-col items-center rounded-t-[28px]">
             <div className="w-full flex items-center h-16 justify-between">
-                <h1 className="text-2xl w-1/5 font-semibold">{today.toLocaleDateString( "en",{ month: 'long', year: 'numeric' })}</h1>
+                <h1 className="text-2xl w-1/5 font-semibold">{weekreference.toLocaleDateString( "en",{ month: 'long', year: 'numeric' })}</h1>
                 <WeekChanger currDate={weekreference} changeDate={setWeekreference}/>
                 <RangeSelector range={range} onRangeChange={setRange} />
             </div>
             <ul className="flex justify-around flex-grow pb-6 gap-2 w-full"> 
                 <CalendarSVG className="text-primaryBlack w-20 px-7 "/>
-                {dates.map((date) =>  <DayCard date={date}/>)}
+                {dates.map((date,index) =>  <DayCard key={index} date={date}/>)}
             </ul>
         </header>
         <section className="pl-10 pr-5 pt-6 flex-grow overflow-y-auto flex relative justify-around  w-full ">
             <aside className="w-20">
-                {hours.map((hour) =>
+                {hours.map((hour,index) =>
                     (
-                        <div className="h-32">{hour}</div>
+                        <div key={index} className="h-32">{hour}</div>
                     )
                 )}
             </aside>
-            {dates.map((_,index) => ( <DayCol hours={hours} isToday={today.getDay()===index+1}/> ))}
+            {dates.map((_,index) => ( <DayCol key={index} aulas={aulas!.filter((aula) => aula.startTime.getDate() === _.getDate() && aula.startTime.getMonth() === _.getMonth())} hours={hours} isToday={today.getDay()===index+1}/> ))}
             {/*dayProgress > 0 && <hr className={`absolute w-full h-2 bg-black top-[${Number.parseInt(dayProgress.toFixed(0))}px]`}></hr>*/}
         </section>
     </main>

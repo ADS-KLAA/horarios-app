@@ -1,13 +1,17 @@
+import AddIcon from "../components/AddIcon"
 import { ClassFiledSVG } from "../components/ClassSVG"
-import ComboBox from "../components/Dropdown"
 
 function Turmas() {
   return (
     <main className="flex items-center h-full gap-2 flex-grow justify-center">
       
       <section className="border bg-opacity-80 border-gray-300 border-opacity-40 rounded-[28px] h-full flex-grow flex flex-col bg-secondaryGray shadow-sm">
-        <header className="h-20 bg-white shadow-sm px-10 flex  items-center rounded-t-[28px] w-full">
+        <header className="h-20 bg-white shadow-sm px-10 flex justify-between items-center rounded-t-[28px] w-full">
         <h1 className="text-2xl w-1/5 font-semibold">Classes</h1>
+          <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-xl text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700">
+            <AddIcon className="h-8 w-8 text-white -ml-3"/>
+            Add Class
+          </button>
         </header>
         <ul className="w-full flex flex-col gap-6 items-center py-5 px-8">
           <li className="w-full relative h-32 rounded-xl bg-white px-4 py-5 shadow-sm" >

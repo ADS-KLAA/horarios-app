@@ -31,7 +31,7 @@ function Navbar() {
         <span className="mt-10 w-full pl-6 text-gray-400 text-lg mb-6">GENERAL</span>
         <ul className="flex flex-col flex-grow  w-full gap-2 items-center">
             {pages.map((page) => (
-              <li onClick={() => navigate(page.navigatesTo)} 
+              <li key={page.name} onClick={() => navigate(page.navigatesTo)} 
               className={`flex w-full text-primaryBlack  rounded-lg py-2 font-medium px-4 justify-start gap-4 text-lg 
                 ${page.navigatesTo === pathname && "shadow-md bg-secondaryGray text-blue-700"}
                 hover:shadow-md hover:bg-secondaryGray hover:text-blue-700 transition-all duration-200 ease-in-out cursor-pointer
