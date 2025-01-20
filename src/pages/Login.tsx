@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../auth/AuthProvider";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
+  const {login} = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
+    login(email, password, "professor");
     navigate("/");
   };
 

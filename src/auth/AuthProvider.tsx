@@ -1,18 +1,24 @@
+import { useQueryClient } from '@tanstack/react-query';
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import {Aula} from "../types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080"
 
-interface User {
-  id: string;
+interface Session {
+  token: string;
   email: string;
-  [key: string]: any; // Add additional fields as needed
+  name?: string;
+  aulas?: Aula[]
 }
 
+type Role = "professor" | "aluno";
+
 interface AuthContextType {
-  user: User | null;
+  session: Session | null;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<User | null>;
-  logout: () => Promise<void>;
+  login: (email: string, password: string, role : Role) => Promise<void>;
+  register: (username:string, email: string, password: string, role : Role) => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -22,79 +28,101 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setLoading] = useState(true);
 
-  const getSession = async () => {
+  const queryClient = useQueryClient();
+
+  const saveToken = (token: string) => {
+    localStorage.setItem("authToken", token);
+  };
+
+  const clearToken = () => {
+    localStorage.removeItem("authToken");
+  };
+
+  useEffect(() => {
+    const initializeSession = async () => {
+      const token = localStorage.getItem("authToken");
+      console.log(token);
+      if (token) {
+       //Validate token
+        try {
+          const response = await fetch(`${API_BASE_URL}/professor/session/info`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            setSession({ token, email: data.email,name:data.name });
+          } else {
+            clearToken(); // Token invalid, clear it
+            queryClient.clear();
+          }
+        } catch {
+          clearToken(); // Clear token on error
+          queryClient.clear();
+        }
+      }
+      setLoading(false);
+    };
+
+    initializeSession();
+  }, []);
+
+  const login = async (email: string, password: string, role: Role): Promise<void> => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/session`, {
-        credentials: 'include', // Include cookies for session management if applicable
+      const response = await fetch(`${API_BASE_URL}/auth/login/${role}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-      } else {
-        setUser(null);
+
+      if (!response.ok) {
+        throw new Error("Login failed");
       }
-    } catch (error) {
-      console.error('Failed to fetch session:', error);
-      setUser(null);
+
+      const data = await response.json();
+      setSession({ token: data.token, email });
+      saveToken(data.token);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    //getSession();
-    setLoading(false);
-  }, []);
-
-  const login = async (email: string, password: string): Promise<User | null> => {
+  const register = async (username:string, email: string, password: string, role: Role) => {
+    setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const response = await fetch(`${API_BASE_URL}/auth/register/${role}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({username, email, password }),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to login');
+        throw new Error("Registration failed");
       }
-  
-      const { token, user } = await response.json();
-  
-      // Store the token in localStorage or cookies
-      localStorage.setItem('jwt', token);
-  
-      // Set the user state
-      setUser(user);
-  
-      return user;
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
+
+      const data = await response.json();
+      setSession({ token: data.token, email });
+      saveToken(data.token);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const logout = async () => {
-    try {
-      await fetch(`${API_BASE_URL}/auth/logout`, {
-        method: 'POST',
-      });
-  
-      // Clear the JWT and user state
-      localStorage.removeItem('jwt');
-      setUser(null);
-    } catch (error) {
-      console.error('Logout error:', error);
-      throw error;
-    }
+  const logout = () => {
+    setSession(null);
+    clearToken();
+    queryClient.clear();
   };
 
-  const value: AuthContextType = { user, login, logout, isLoading };
+  const value: AuthContextType = { session, isLoading, login, logout, register };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

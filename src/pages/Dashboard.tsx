@@ -25,7 +25,7 @@ function getRestOfWeekDates(today : Date) {
 
 function Dashboard() {
 
-  const {data:aulas,isLoading} = useSessions();  
+  const {data:aulas,isLoading} = useSessions();
 
   const [weekreference,setWeekreference] = useState<Date>(today);   
   const dates = useMemo(() =>  getRestOfWeekDates(weekreference),[weekreference]); 

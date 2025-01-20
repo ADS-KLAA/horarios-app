@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../auth/AuthProvider";
 
 const Signup: React.FC = () => {
+  
+  const navigate = useNavigate();
+  const {register} = useAuth();
+
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password) return;
+    register(name,email,password,"professor");
     navigate("/");
   };
 

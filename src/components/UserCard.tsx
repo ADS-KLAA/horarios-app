@@ -1,22 +1,25 @@
 import { useNavigate } from "react-router"
+import { useAuth } from "../auth/AuthProvider";
 
 function UserCard() {
 
     const nav = useNavigate();
-    const logout = () => {
+    const {logout, session} = useAuth();
+    const logoutWrapper = () => {
+        logout();
         nav("login");
     }
 
-    const userName = "Kevin Borges"
-    const userMail = "KevinBorges@iscte-iul.pt"
+    const userName = session && session.name ? session.name : "Professor Logado";
+    const userMail = session?.email;
   return (
     <li className="h-26 gap-4 py-4 flex items-center rounded-lg bg-secondaryGray shadow-lg w-full justify-start px-4 mt-auto">
-        <span className="h-12 w-12 text-center flex items-center rounded-full justify-center text-2xl  bg-blue-700 text-secondaryGray">{((userName).split(" ")[0].charAt(0) + (userName).split(" ")[1].charAt(0)).toUpperCase()}</span>
+        <span className="h-12 w-12 text-center flex items-center rounded-full justify-center text-2xl  bg-blue-700 text-secondaryGray">{((userName).split(" ")[0].charAt(0) + ( userName.split(" ").length > 1 ? (userName).split(" ")[1].charAt(0) : "").toUpperCase())}</span>
         <section>
             <span className="text-lg w-full block">{userName}</span>
             <span className="text-lg text-gray-400">{userMail}</span>
         </section>
-        <button onClick={logout} className="ml-auto h-full w-16 p-4  rounded-full hover:bg-primaryGray">
+        <button onClick={logoutWrapper} className="ml-auto h-full w-16 p-4  rounded-full hover:bg-primaryGray">
             <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
