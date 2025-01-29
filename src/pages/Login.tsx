@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../auth/AuthProvider";
 
 const Login: React.FC = () => {
@@ -79,11 +79,15 @@ const Login: React.FC = () => {
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
+              marginBottom:"14px"
             }}
           >
             Login
           </button>
         </form>
+        <span className="w-full flex gap-2 justify-end text-right text-gray-800">
+          Don't have an account? <Link className="underline underline-offset-2 hover:text-blue-700" to={"/signup"}>Register Here</Link>
+        </span>
       </div>
     </div>
   );

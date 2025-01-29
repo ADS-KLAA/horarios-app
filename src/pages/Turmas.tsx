@@ -1,9 +1,36 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import AddIcon from "../components/AddIcon"
-import { ClassFiledSVG } from "../components/ClassSVG"
 import AddClassModal from "../components/AddClassModal";
+import { useAuth } from "../auth/AuthProvider";
+import { Aula } from "../types";
+import TurmaCard from "../components/TurmaCard";
 
 function Turmas() {
+
+  const {session} = useAuth();
+  const seen = new Set<string>();
+  const turmas = useMemo(() => {
+    
+    return (session?.aulas ?? [] as Aula[])
+        .filter(aula => {
+            const key = `${aula.turma}-${aula.uc}-${aula.curso}`;
+            if (seen.has(key)) {
+                return false;
+            }
+            seen.add(key);
+            return true;
+        })
+        .map(aula => ({
+            turma: aula.turma,
+            uc: aula.uc,
+            curso: aula.curso,
+            studentCount: aula.inscritos,
+        }));
+  }
+    
+    ,[session])
+
+    console.log(turmas)
 
   const [addTurmaModalOpen, setAddTurmaModaOpen] =useState(false);
   return (
@@ -18,34 +45,12 @@ function Turmas() {
           </button>
         </header>
         <ul className="w-full flex flex-col gap-6 items-center py-5 px-8">
-          <li className="w-full relative h-32 rounded-xl bg-white px-4 py-5 shadow-sm" >
-              <span className="bock font-semibold text-lg ">Experiência do utilizador e visualização de informação</span>
-              <span className="block font-semibold mt-2 text-gray-600">LEI</span>
-              <figure className="mt-4">
-              <svg className="w-5 "
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke="#000"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 7v5h3m6 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                  />
-              </svg>
-              </figure>
-              <figure className="w-12 flex items-center h-6 absolute right-4 bottom-2  ">
-                20          
-                <ClassFiledSVG className="h-6 inline-block ml-1" />
-              </figure>
-          </li>
+        {turmas.length > 0 && turmas.map(({uc,curso,studentCount,turma}) => <TurmaCard uc={uc} name={turma} curso={curso} studentCount={studentCount ?? 0} />)}
         </ul>
         {/* <ComboBox label="Matita" options={["cao","gato","tartaruga"]}/> */}
       </section>
       {/* <section className="border bg-opacity-80 w-1/4 border-gray-300 border-opacity-40 rounded-[28px] h-full  flex flex-col bg-secondaryGray shadow-sm">
-
+      
       </section> */}
     </main>
   )

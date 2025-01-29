@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../auth/AuthProvider";
 
 const Signup: React.FC = () => {
@@ -39,7 +39,7 @@ const Signup: React.FC = () => {
         }}
       >
         <img
-          src="src/images/iscteLogo.png"
+          src="src/assets/iscteLogo.png"
           alt="ISCTE logo"
           style={{ marginBottom: "24px" }}
         />
@@ -96,11 +96,15 @@ const Signup: React.FC = () => {
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
+              marginBottom:"14px"
             }}
           >
             Registar
           </button>
         </form>
+        <span className="w-full flex gap-2 justify-end text-right text-gray-800">
+          Already have an account? <Link className="underline underline-offset-2 hover:text-blue-700" to={"/login"}>Login Here</Link>
+        </span>
       </div>
     </div>
   );

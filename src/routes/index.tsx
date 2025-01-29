@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes,Route } from "react-router"
+import { BrowserRouter, Routes,Route, Navigate } from "react-router"
 import ProctectedRoute from "../auth"
 import App from "../App"
 import Dashboard from "../pages/Dashboard"
@@ -18,6 +18,7 @@ function RouterComponent() {
             </Route>
             <Route path="login" element={<Login/>}/>
             <Route path="signup" element={<Signup/>}/>
+            <Route path="*" element={<Navigate to={"/"}/>}/>
         </Routes>
     </BrowserRouter>
   )

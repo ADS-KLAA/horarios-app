@@ -9,13 +9,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080
 
 function AddClassModal({onClose} : {onClose: () => void}) {
 
-
-  //type Option = {name:string, value:string | number}
-
   const [course, setCourse] = useState<string | null>(null);
   const { data: cursos, isLoading: isLoadingCursos } = useCursos();
-
-
 
   const { data: disciplinas, isLoading: isLoadingDisciplinas } = useDisciplinas(course || "");
 
@@ -73,41 +68,39 @@ function AddClassModal({onClose} : {onClose: () => void}) {
         className="bg-white rounded-lg shadow-lg p-6 w-96"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-xl font-bold mb-4">Choose a Your Class</h2>
+        <h2 className="text-xl font-bold mb-4">Find Your Class</h2>
         <div className="space-y-4">
           <div>
             <label
-              htmlFor="dropdown1"
+              htmlFor="cursodrop"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
               Course
             </label>
-            <select disabled={isLoadingCursos} onChange={(e) => setCourse(e.target.value)}
-              id="dropdown1"
+            {!isLoadingCursos ? <select disabled={isLoadingCursos} onChange={(e) => setCourse(e.target.value)}
+              id="cursodrop"
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Select Option 1</option>
               {cursos?.map((curso,index) => (
                 <option key={index} value={curso}>
                   {curso}
                 </option>
               ))}
-            </select>
+            </select> : <span> Loading </span> }
           </div>
 
          {course && !isLoadingDisciplinas && <div>
             <label
-              htmlFor="dropdown2"
+              htmlFor="ucdrop"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
               Curricular Unit
             </label>
             <select
               onChange={(e) => setUc(e.target.value)}
-              id="dropdown2"
+              id="ucdrop"
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Select Option 2</option>
               {disciplinas?.map((disc) => (
                 <option key={disc} value={disc}>
                   {disc}
@@ -118,17 +111,16 @@ function AddClassModal({onClose} : {onClose: () => void}) {
 
          {uc && !isLoadingTurmas && <div>
             <label
-              htmlFor="dropdown3"
+              htmlFor="turmadrop"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
               Class
             </label>
             <select
               onChange={(e) => setSelectedClass(e.target.value)}
-              id="dropdown3"
+              id="turmadrop"
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Select Option 3</option>
               {turmas?.map((turma,index) => (
                 <option key={index} value={turma}>
                   {turma}

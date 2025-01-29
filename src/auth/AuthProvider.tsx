@@ -41,10 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem("authToken");
   };
 
-  useEffect(() => {
-    const initializeSession = async () => {
-      const token = localStorage.getItem("authToken");
-      console.log(token);
+  const initializeSession = async (token?:string) => {
       if (token) {
        //Validate token
         try {
@@ -58,7 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
           if (response.ok) {
             const data = await response.json();
-            setSession({ token, email: data.email,name:data.name });
+            setSession({ token, email: data.email,name:data.name, aulas:data.aulas });
           } else {
             clearToken(); // Token invalid, clear it
             queryClient.clear();
@@ -71,8 +68,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setLoading(false);
     };
 
-    initializeSession();
-  }, []);
+  useEffect(() => {
+    const token = localStorage.getItem("authToken") || undefined;
+    initializeSession(token);
+  }, [queryClient]);
 
   const login = async (email: string, password: string, role: Role): Promise<void> => {
     setLoading(true);
@@ -88,8 +87,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       const data = await response.json();
-      setSession({ token: data.token, email });
+      await initializeSession(data.token);
+      //setSession({ token: data.token, email });
       saveToken(data.token);
+
     } finally {
       setLoading(false);
     }
@@ -109,7 +110,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       const data = await response.json();
-      setSession({ token: data.token, email });
+      await initializeSession(data.token);
       saveToken(data.token);
     } finally {
       setLoading(false);

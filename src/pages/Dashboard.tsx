@@ -5,8 +5,11 @@ import DayCol from "../components/DayCol";
 import WeekChanger from "../components/WeekChanger";
 import RangeSelector from "../components/RangeSelector";
 import { useSessions } from "../api/useSessions";
+import { useAuth } from "../auth/AuthProvider";
 
 const today = new Date();
+
+
 
 function getRestOfWeekDates(today : Date) {
     const restOfWeek = [];
@@ -24,8 +27,12 @@ function getRestOfWeekDates(today : Date) {
 
 
 function Dashboard() {
+    
+    const {session} = useAuth();
+    const aulas = session?.aulas;
 
-  const {data:aulas,isLoading} = useSessions();
+  const {data:aulasss,isLoading} = useSessions();
+  
 
   const [weekreference,setWeekreference] = useState<Date>(today);   
   const dates = useMemo(() =>  getRestOfWeekDates(weekreference),[weekreference]); 
@@ -59,7 +66,7 @@ function Dashboard() {
                     )
                 )}
             </aside>
-            {dates.map((_,index) => ( <DayCol key={index} aulas={aulas!.filter((aula) => aula.startTime.getDate() === _.getDate() && aula.startTime.getMonth() === _.getMonth())} hours={hours} isToday={today.getDay()===index+1}/> ))}
+            {dates.map((_,index) => ( <DayCol key={index} aulas={aulas!.filter((aula) => new Date(aula.dia).getDate() === _.getDate() && new Date(aula.dia).getMonth() === _.getMonth())} hours={hours} isToday={today.getDay()===index+1}/> ))}
             {/*dayProgress > 0 && <hr className={`absolute w-full h-2 bg-black top-[${Number.parseInt(dayProgress.toFixed(0))}px]`}></hr>*/}
         </section>
     </main>

@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { ClassSession } from "../types";
+import { Aula } from "../types";
 
 const STALE_SECONDS = 240;
 
 
-const fetchSessions = async () : Promise<ClassSession[]> => {
+const fetchSessions = async () : Promise<Aula[]> => {
     return [
         {
-            uc:"EUVI",class:"LEI-1",
-            startTime: new Date(),endTime: new Date(),curso:"LEI"
+            uc:"EUVI",turma:"LEI-1",id:"1",
+            inicio: new Date().toDateString(),dia: new Date().toISOString() ,fim: new Date().toDateString(),curso:"LEI",confirmados:[{ye:"ye"}],inscritos:1,
         }
     ]
 }
