@@ -6,6 +6,8 @@ import WeekChanger from "../components/WeekChanger";
 import RangeSelector from "../components/RangeSelector";
 import { useSessions } from "../api/useSessions";
 import { useAuth } from "../auth/AuthProvider";
+import { useQueryClient } from "@tanstack/react-query";
+import { Aula } from "../types";
 
 const today = new Date();
 
@@ -28,10 +30,9 @@ function getRestOfWeekDates(today : Date) {
 
 function Dashboard() {
     
-    const {session} = useAuth();
-    const aulas = session?.aulas;
+    const queryClient = useQueryClient();
 
-  const {data:aulasss,isLoading} = useSessions();
+    const aulas = queryClient.getQueryData(["aulas"]) as Aula[];
   
 
   const [weekreference,setWeekreference] = useState<Date>(today);   
@@ -44,7 +45,7 @@ function Dashboard() {
   },[range,today]);
   console.log(Number.parseInt(dayProgress.toFixed(0)));*/
 
-  return !isLoading && (
+  return (
     <main 
     className="border bg-opacity-80 border-gray-300 border-opacity-40 rounded-[28px] h-full flex-grow flex flex-col bg-secondaryGray shadow-sm">
         <header className="bg-white w-full shadow-sm px-10  flex flex-col items-center rounded-t-[28px]">

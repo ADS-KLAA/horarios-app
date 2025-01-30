@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080";
-const fetchCursos = async (): Promise<string[]> => {
+
+
+export const fetchCursos = async (): Promise<string[]> => {
   const token = localStorage.getItem("authToken");
   if (!token) throw new Error("Unauthorized");
 
@@ -25,8 +27,8 @@ const fetchCursos = async (): Promise<string[]> => {
 
 export const useCursos = () => {
     return useQuery({
-        queryKey:['sessions'],
+        queryKey:['cursos'],
         queryFn: () => fetchCursos(),
-        staleTime:5 * 60 * 1000
+        staleTime:Infinity
     });
 };

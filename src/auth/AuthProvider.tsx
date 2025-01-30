@@ -1,6 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import {Aula} from "../types";
+import { fetchCursos } from '../api/useCursos';
+import { useNavigate } from 'react-router';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080"
 
@@ -19,6 +21,7 @@ interface AuthContextType {
   login: (email: string, password: string, role : Role) => Promise<void>;
   register: (username:string, email: string, password: string, role : Role) => Promise<void>;
   logout: () => void;
+  refreshSession: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -45,6 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (token) {
        //Validate token
         try {
+          console.log("refresh2");
           const response = await fetch(`${API_BASE_URL}/professor/session/info`, {
             method: "GET",
             headers: {
@@ -56,6 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           if (response.ok) {
             const data = await response.json();
             setSession({ token, email: data.email,name:data.name, aulas:data.aulas });
+            queryClient.setQueryData(["aulas"], data.aulas);
           } else {
             clearToken(); // Token invalid, clear it
             queryClient.clear();
@@ -70,7 +75,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken") || undefined;
-    initializeSession(token);
+    initializeSession(token).then( () => 
+      fetchCursos().then((data) => queryClient.setQueryData(['cursos'],data))
+    )
+
   }, [queryClient]);
 
   const login = async (email: string, password: string, role: Role): Promise<void> => {
@@ -123,7 +131,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     queryClient.clear();
   };
 
-  const value: AuthContextType = { session, isLoading, login, logout, register };
+  const refreshSession = async() => {
+    const token = localStorage.getItem("authToken") || undefined;
+    if(token){
+      await initializeSession(token);
+      console.log("refresh1")
+    }else{
+      const navigate = useNavigate();
+      navigate("/login")
+    }
+  }
+
+  const value: AuthContextType = { session, isLoading, login, logout, register, refreshSession };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

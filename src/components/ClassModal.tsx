@@ -55,6 +55,10 @@ function ClassModal({class:aula} : {class:Aula}) {
             <figure className="inline-flex justify-end items-center text-xl gap-2"> 
                 <ClassSVG className="w-8 h-8"/> <span className="text-blue-700">{aula.confirmados?.length}</span> / {aula.inscritos} 
             </figure>
+            <span className="text-xl mt-6">Presenças</span>
+            <figure className="inline-flex justify-end items-center text-xl gap-2"> 
+                <ClassSVG className="w-8 h-8"/> <span className="text-blue-700">{aula.presencas?.length}</span> / {aula.confirmados?.length} 
+            </figure>
         </section>
     </header>
 

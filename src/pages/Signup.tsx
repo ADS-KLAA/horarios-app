@@ -46,7 +46,7 @@ const Signup: React.FC = () => {
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <input
             type="name"
-            placeholder="Nome"
+            placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -99,7 +99,7 @@ const Signup: React.FC = () => {
               marginBottom:"14px"
             }}
           >
-            Registar
+            Sign Up
           </button>
         </form>
         <span className="w-full flex gap-2 justify-end text-right text-gray-800">

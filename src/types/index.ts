@@ -6,6 +6,7 @@ export interface Aula {
     turma: string; // Class identifier
     inscritos: number; // Number of enrolled students
     confirmados?: unknown[]; // List of confirmed attendees (can be empty)
+    presencas?: unknown[]; // List of confirmed attendees (can be empty)
     diaSemana?: string; // Day of the week (e.g., "Ter" for Tuesday)
     inicio: string; // Start time in HH:mm:ss format
     fim: string; // End time in HH:mm:ss format
