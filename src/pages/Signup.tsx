@@ -1,15 +1,20 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../auth/AuthProvider";
 
 const Signup: React.FC = () => {
+  
+  const navigate = useNavigate();
+  const {register} = useAuth();
+
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password) return;
+    register(name,email,password,"professor");
     navigate("/");
   };
 
@@ -34,14 +39,14 @@ const Signup: React.FC = () => {
         }}
       >
         <img
-          src="src/images/iscteLogo.png"
+          src="src/assets/iscteLogo.png"
           alt="ISCTE logo"
           style={{ marginBottom: "24px" }}
         />
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <input
             type="name"
-            placeholder="Nome"
+            placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -91,11 +96,15 @@ const Signup: React.FC = () => {
               border: "none",
               borderRadius: "4px",
               cursor: "pointer",
+              marginBottom:"14px"
             }}
           >
-            Registar
+            Sign Up
           </button>
         </form>
+        <span className="w-full flex gap-2 justify-end text-right text-gray-800">
+          Already have an account? <Link className="underline underline-offset-2 hover:text-blue-700" to={"/login"}>Login Here</Link>
+        </span>
       </div>
     </div>
   );

@@ -7,10 +7,10 @@ import { AuthProvider } from './auth/AuthProvider.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <AuthProvider>
     <QueryProvider>
+    <AuthProvider>
       <RouterComponent/>
-    </QueryProvider>
     </AuthProvider>
+    </QueryProvider>
   </StrictMode>,
 )

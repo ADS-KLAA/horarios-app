@@ -4,10 +4,10 @@ import LoadingScreen from "../pages/LoadingScreen";
 
 function ProctectedRoute() {
   
-  const {user,isLoading} = useAuth();
+  const {session,isLoading,} = useAuth();
 
   if(isLoading) return <LoadingScreen/>
-  const loggedIn = true || user;
+  const loggedIn = session != null;
 
   return (
     <>
